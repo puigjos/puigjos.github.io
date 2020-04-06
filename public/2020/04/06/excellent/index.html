@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>My New Package: ConsReg</title>
+        <link rel="canonical" href="/2020/04/06/excellent/">
+        <style>
+
+    html body {
+        font-family: 'Lato', sans-serif;
+        background-color: #f5f5f5;
+    }
+
+    :root {
+        --accent: #122666;
+        --border-width:  0 ;
+    }
+
+</style>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=VT323">
+
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/lakeside-light.min.css"> 
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/all.css" integrity="sha384-Mmxa0mLqhmOeaE8vgOSbKacftZcsNYDjQzuCOm6D02luYSzBG8vpaOykv9lFQ51Y" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+
+ 
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/bash.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/go.min.js"></script>
+    
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+
+<script>$(document).on('click', function() { $('.collapse').collapse('hide'); })</script>
+
+
+<script>
+$(document).ready(function(){
+    
+  var input = $('#night-mode-toggle');
+  var container = $('#bigbody');
+  var stat = $('#button-status');
+  
+  container.toggleClass(localStorage.toggled);
+  stat.bootstrapToggle(localStorage.button).change();
+  
+  input.on('click', function() {
+      if (localStorage.toggled != "-nightmode" ) {
+          container.toggleClass("-nightmode", true );
+          localStorage.toggled = "-nightmode";
+          localStorage.button = "on";
+       } else {
+          container.toggleClass("-nightmode", false );
+          localStorage.toggled = "";
+          localStorage.button = "off"
+       }
+  })
+});
+</script>
+ <meta name="generator" content="Hugo 0.68.3" />
+        <link href="" rel="alternate" type="application/rss+xml" title="Josep Puig&#39;s Webpage" />
+        <link href="" rel="feed" type="application/rss+xml" title="Josep Puig&#39;s Webpage" />
+        
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#000000">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    
+    
+    
+    <meta property="og:title" content="My New Package: ConsReg">
+    <meta property="og:type" content="article">
+      
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:image" content="/favicon/Screenshot_1.png" >
+      
+    <meta property="description" content="">
+    <meta property="og:description" content="">
+    
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:site" content="">
+    
+    </head>
+
+    
+    
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    
+
+    <body id = "bigbody">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand visible-xs" href="#">My New Package: ConsReg</a>
+                    <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse">
+                    
+                        <ul class="nav navbar-nav">
+                            
+                                <li><a href="/">Home</a></li>
+                            
+                                <li><a href="/post/">Posts</a></li>
+                            
+                                <li><a href="/tags/">Tags</a></li>
+                            
+                        </ul>
+                    
+                    
+                        <ul class="nav navbar-nav navbar-right">
+                            
+                                <li class="navbar-icon"><a href="mailto:puigjos@gmail.com"><i class="far fa-envelope"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://github.com/puigjos"><i class="fab fa-github"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://www.linkedin.com/in/puigjos/"><i class="fab fa-linkedin"></i></a></li>
+                            
+                            <li id="night-mode-toggle">
+    <input type="checkbox" id = "button-status"
+        data-toggle="toggle"
+        data-width = "10"
+        data-height = "1"
+        data-on="<i class='far fa-moon fa-lg'></i>"
+        data-off= "<i class='far fa-sun fa-lg'></i>"
+        data-style="ios"
+        data-onstyle = "default">
+</li>
+                        </ul>
+                    
+                </div>
+            </div>
+        </nav>
+
+
+<main>
+
+    <div class="item">
+
+    
+    
+    
+
+    
+    
+      
+    
+
+    <h4><a href="/2020/04/06/excellent/">My New Package: ConsReg</a></h4>
+    <h5>April 6, 2020 - 10 minutes</h5>
+    <h5></h5>
+
+    
+
+        <a href="/categories/tutorials">
+        <kbd class="item-cat"> Tutorials </kbd>
+    </a>
+    
+
+        <a href="/categories/r">
+        <kbd class="item-cat"> R </kbd>
+    </a>
+    
+
+        <a href="/categories/package">
+        <kbd class="item-cat"> package </kbd>
+    </a>
+    
+    
+    <a href="/tags/r">
+        <kbd class="item-tag"> R </kbd>
+    </a>
+    
+    <a href="/tags/tutorials">
+        <kbd class="item-tag"> Tutorials </kbd>
+    </a>
+    
+    <a href="/tags/package">
+        <kbd class="item-tag"> package </kbd>
+    </a>
+    
+
+</div>
+
+
+    <br> <div class="text-justify">
+
+
+<style type="text/css">
+.kable-table table {
+  margin-left: 0;
+}
+img {
+  border: none;
+}
+</style>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>One of my main problems in my day-to-day work developing predictive models is in the logic of the model. When I talk about the model logic I refer that: the coefficients of the predictive variables make sense from an economic reasoning, the weight of each variable introduced is reasonable, the variables requested by business department have been incorporated,… and of course the error of the model is low!</p>
+<p>Imagine the situation, you build a model with Decision Trees for the prediction of credit default: you get low train and test errors, you detect the variables that have more influence and these are from an economic logic point of view (income, savings, loan information, educational level,…), you prepare a shiny app so that the client can “play” with the model and can introduce some random values to the predictive variables,… everything is perfect until after a few days he calls you saying that he doesn’t understand why the model returns a much higher probability of default for a person with a doctorate degree than a person with a lower level of studies.</p>
+<p>It could also happen, for example, that by slightly modifying the income level, the probability changes considerably, while by modifying the savings, it changes practically nothing.</p>
+<p>These facts can be influenced by how the data are generated (risk policies followed by the company), for not having enought observations or by the structure of the data itself.</p>
+<p>The methods that are usually used to correct are, for example, elimination directly of variables from the model that do not have the desired effect, processing of variables (combination of varialbes), regularization, Bayesian methods incorporating priors in the parameters (complicated, if you are not a Bayesian expert), … However, some of these methods do not solve your problem or you spend lots of time try to solve that.</p>
+<p>Even if the model error is low, for a person not used to using predictive models, it is really difficult to trust a model that he does not understand and that the results it proposes are illogical. Sometimes, it can be convenient to sacrifice some error if you win in logic. And if the model is logical, it is more likely to generalize well in out-of-sample.</p>
+<p>It is in the world of time series, in my experience, where this problem is most accentuated.</p>
+<p><strong>ConsReg</strong> is a collection of functions, that I have been writting and that I’ve put them together in this package, in order to estimate models with a priori constraints.</p>
+<p>It has two main functions:</p>
+<ul>
+<li>ConsReg: to estimate linear and logistic regression models</li>
+<li>ConsRegArima: to estimate regression models with errors that follow an Arma process.</li>
+</ul>
+<p>For the estimation of the parameters you can use functions from several specialized optimization packages. Even with MCMC simulation method optimization.
+I think the package is quite simple to use and intuitive.
+It is my first package I write in R and it is the first version of the package, so there will be many improvements! Please contact to me.</p>
+</div>
+<div id="start" class="section level2">
+<h2>Start</h2>
+<p>This first vignette is a first presentation of the package.</p>
+<p>For the first example, I will use the fake_data dataset. This is a fake dataset only to show the functionalities of this package</p>
+<pre class="r"><code>require(ConsReg)
+require(ggplot2)
+require(data.table)</code></pre>
+</div>
+<div id="consreg" class="section level2">
+<h2>ConsReg</h2>
+<pre class="r"><code>data(&quot;fake_data&quot;)</code></pre>
+<p>Let’s start with a simple linear regression:</p>
+<pre class="r"><code>fit1 = ConsReg(formula = y~x1+x2+x3+ I(x3^2) + x4, family = &#39;gaussian&#39;,
+                     optimizer = &#39;solnp&#39;,
+                     data = fake_data)</code></pre>
+<pre><code>## 
+## Iter: 1 fn: 3.6337    Pars:  -1.651009  0.129054 -0.004316 -0.127660  0.020008  0.654738
+## solnp--&gt; Completed in 1 iterations</code></pre>
+<pre class="r"><code>fit1$coefficients</code></pre>
+<pre><code>##  (Intercept)           x1           x2           x3      I(x3^2) 
+## -1.651008854  0.129054342 -0.004316285 -0.127659853  0.020007889 
+##           x4 
+##  0.654737554</code></pre>
+<pre class="r"><code>coef(lm(y~x1+x2+x3+I(x3^2) + x4, data = fake_data))</code></pre>
+<pre><code>##  (Intercept)           x1           x2           x3      I(x3^2) 
+## -1.651008854  0.129054342 -0.004316285 -0.127659853  0.020007889 
+##           x4 
+##  0.654737554</code></pre>
+<p>The use of the function ConsReg is very simple and similar to glm/lm function:</p>
+<ul>
+<li>The formula term</li>
+<li>family: a description of the error distribution: “gaussian” (linear regression), “binomial” for logistic regression or “poisson” (poisson regression)</li>
+<li>optimizer: several optimizer functions from several packages are implmented.</li>
+<li>data: data to be used</li>
+</ul>
+<p>Possible optimizers are:</p>
+<ul>
+<li>solnp (default): Nonlinear optimization using augmented Lagrange method</li>
+<li>gosolnp: Random Initialization and Multiple Restarts of the solnp solver</li>
+<li>optim: General-purpose Optimization (stats package)</li>
+<li>dfoptim: Hooke-Jeeves derivative-free minimization algorithm</li>
+<li>nloptr: nloptr is an R interface to NLopt</li>
+<li>DEoptim: Differential Evolution Optimization</li>
+<li>mcmc: (from FME:ModMCMC) Constrained Markov Chain Monte Carlo</li>
+<li>MCMCmetrop: random walk Metropolis algorithm</li>
+<li>adaptMCMC: robust adaptive Metropolis sampler</li>
+<li>GA: Genetic algorithms</li>
+<li>GenSA: Generalized Simulated Annealing Function</li>
+</ul>
+<p>Additional arguments of each function can be passed to the function <strong>ConsReg</strong>.</p>
+<p>The object <em>fit1</em> has the following information:</p>
+<p>Error metrics:</p>
+<pre class="r"><code>fit1$metrics</code></pre>
+<pre><code>##      LogLik     RMSE      MAE     MAPE      MSE    SMAPE
+## 1 -2410.638 2.695813 2.052225 4.255439 7.267408 1.086447</code></pre>
+<p>Residual analysis</p>
+<pre class="r"><code>forecast::gghistogram(fit1$residuals, add.normal = T, add.rug = T) + 
+  theme_minimal()</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;xts&#39;:
+##   method     from
+##   as.zoo.xts zoo</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<pre><code>## Registered S3 methods overwritten by &#39;forecast&#39;:
+##   method             from    
+##   fitted.fracdiff    fracdiff
+##   residuals.fracdiff fracdiff</code></pre>
+<p><img src="/post/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-5-1.png" width="624" /></p>
+<p>Let’s put some constraints to the model:</p>
+<ul>
+<li>All coefficients will be less than 1 and greater than -1</li>
+<li>The coefficient of <em>x3</em> and <em>x3^2</em> must satisfied: (x3 + x3^2 &gt; 0.01)</li>
+<li>x4 &lt; 0.2</li>
+</ul>
+<p>It can be easily incoporate in the function:</p>
+<pre class="r"><code>fit2 = ConsReg(formula = y~x1+x2+x3+ I(x3^2) + x4, data = fake_data,
+            family = &#39;gaussian&#39;,
+            constraints = &#39;(x3 + `I(x3^2)`) &gt; .01, x4 &lt; .2&#39;,
+            optimizer = &#39;mcmc&#39;,
+            LOWER = -1, UPPER = 1,
+            ini.pars.coef = c(-.4, .12, -.004, 0.1, 0.1, .15))</code></pre>
+<pre><code>## number of accepted runs: 869 out of 1000 (86.9%)</code></pre>
+<p>To put in the function is just:</p>
+<ul>
+<li>LOWER: -1 means that the lowest value that can take any coefficient is -1</li>
+<li>UPPER: 1 means that the highest value that can take any coefficient is 1</li>
+<li>constraints: is an string with the different restrictions in the coefficients. Each constraint must be separated by a comma.</li>
+<li>ini.pars.coef: finally, this parameter is used to set the initial values. Those values must fulfill all the restrictions</li>
+</ul>
+<p>Observe that now, all coefficient fulfill our constraints:</p>
+<pre class="r"><code>rbind(coef(fit1), 
+      coef(fit2))</code></pre>
+<pre><code>##      (Intercept)         x1           x2         x3     I(x3^2)        x4
+## [1,]  -1.6510089 0.12905434 -0.004316285 -0.1276599  0.02000789 0.6547376
+## [2,]  -0.9084914 0.04276187  0.006941862  0.1576917 -0.05707335 0.1731182</code></pre>
+<p>Also we can compare the errors to see that there is no much difference:</p>
+<pre class="r"><code>rbind(fit1$metrics, 
+      fit2$metrics)</code></pre>
+<pre><code>##      LogLik     RMSE      MAE     MAPE      MSE    SMAPE
+## 1 -2410.638 2.695813 2.052225 4.255439 7.267408 1.086447
+## 2 -2484.927 2.903708 2.109934 3.108930 8.431521 1.198035</code></pre>
+<p>For predictions, it follows the same system as a glm or lm object:</p>
+<pre class="r"><code>pred = data.frame(
+  fit1 = predict(fit1, newdata = fake_data[2:3,]), 
+  fit2 = predict(fit2, newdata = fake_data[2:3,])
+  )
+pred</code></pre>
+<pre><code>##        fit1       fit2
+## 2 -1.676538 -0.7668886
+## 3 -2.263643 -1.0736876</code></pre>
+<p>Setting the parameter <strong>component = T</strong>, returns a matrix for the weight of each variable to the predictions</p>
+<pre class="r"><code>pr = predict(fit2, components = T, newdata = fake_data[5,])
+pr</code></pre>
+<pre><code>##        Total (Intercept)         x1           x2        x3    I(x3^2)
+## 5 -0.9183701  -0.9084914 0.05245317 -0.007305731 0.4730752 -0.5136602
+##            x4
+## 5 -0.01444113</code></pre>
+</div>
+<div id="consregarima" class="section level2">
+<h2>ConsRegArima</h2>
+<p>As I said, it is in the time series models where the problem mentioned above arises.</p>
+<p>In this case, a function has been implemented that estimates a regression with the Arima errors.</p>
+<p>This functions is quite similar to stats::arima function or in the forecast package, but the restrictions and constraints have been introduced. Also it can be write more friendly by using formula class. Let me show you.</p>
+<p>For this example, I will use another fake dataset</p>
+<pre class="r"><code>data(&#39;series&#39;)</code></pre>
+<p>The objective function has the following trend:</p>
+<pre class="r"><code>plot(series$y, t=&#39;l&#39;)</code></pre>
+<p><img src="/post/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-12-1.png" width="624" /></p>
+<p>And the data set has 4 predictive variables:</p>
+<pre class="r"><code>head(series)</code></pre>
+<pre><code>##            y          x1         x2 x3         x4
+## 1 1.42405821 -0.60516472 -0.2025728  0 -1.7669537
+## 2 2.94342823  0.05313724 -1.9044371  0 -0.3468814
+## 3 0.02272839  1.11217403  0.7198898  0  1.8846833
+## 4 2.21913304  1.28949904 -1.7833160  0  0.1728917
+## 5 2.91363067 -2.13136723 -2.1982599  0 -2.5840346
+## 6 0.64597747  0.32458611  0.3002453  0 -0.7843327</code></pre>
+<p>We will estimate a first arma model (1, 1) with no regressors and no intercept</p>
+<pre class="r"><code>fit_ts1 = ConsRegArima(y ~ -1, order = c(1, 1), data = series[1:60, ])</code></pre>
+<pre><code>## 
+## Iter: 1 fn: 0.1970    Pars:   0.97980 -0.72928
+## Iter: 2 fn: 0.1970    Pars:   0.97980 -0.72928
+## solnp--&gt; Completed in 2 iterations</code></pre>
+<pre class="r"><code>fit_ts1$coefficients</code></pre>
+<pre><code>##        ar1        ma1 
+##  0.9798030 -0.7292797</code></pre>
+<pre class="r"><code>coef(arima(series$y[1:60], order = c(1, 0, 1), include.mean = F, method = &#39;CSS&#39;))</code></pre>
+<pre><code>##        ar1        ma1 
+##  0.9798008 -0.7292652</code></pre>
+<p>Next I will add some regressors to the model:</p>
+<pre class="r"><code>fit_ts2 = ConsRegArima(y ~ x1+x2+x3+x4, order = c(1, 1), data = series[1:60,])</code></pre>
+<pre><code>## 
+## Iter: 1 fn: -0.7311   Pars:   0.82849  0.39639 -0.80844  1.35773 -0.40255 -0.33677  1.16707
+## Iter: 2 fn: -0.7311   Pars:   0.82849  0.39639 -0.80844  1.35773 -0.40255 -0.33677  1.16707
+## solnp--&gt; Completed in 2 iterations</code></pre>
+<p>Next I will add some constraints to the model:</p>
+<pre class="r"><code>fit_ts3 = ConsRegArima(y ~ x1+x2+x3+x4, order = c(1, 1), data = series[1:60,], 
+                       LOWER = -1, UPPER = 1, 
+                       constraints = &quot;x4 &lt; x2&quot;, 
+                       ini.pars.coef = c(.9, .3, -.1, .3, -.3), 
+                       control = list(trace = 0) #  not show the trace of the optimizer 
+                       )
+fit_ts3$coefficients</code></pre>
+<pre><code>## (Intercept)          x1          x2          x3          x4         ar1 
+##   0.9983209   0.2870705  -0.4862388   0.4804189  -0.4862388  -0.3641870 
+##         ma1 
+##   0.6373165</code></pre>
+<p>To put in the function is just:</p>
+<ul>
+<li>LOWER: -1 means that the lowest value that can take any coefficient is -1</li>
+<li>UPPER: 1 means that the highest value that can take any coefficient is 1</li>
+<li>constraints: is an string with the different restrictions in the coefficients. .</li>
+<li>ini.pars.coef: finally, this parameter is used to set the initial values <strong>only for the regression coefficient</strong>. Those values must fulfill all the restrictions</li>
+</ul>
+<p>Next, we will change the optimizer. Let’s try with a genetic algorithm:</p>
+<pre class="r"><code>fit_ts4 = ConsRegArima(y ~ x1+x2+x3+x4, order = c(1, 1), data = series[1:60,],
+                       LOWER = -1, UPPER = 1,
+                       constraints = &quot;x4 &lt; x2&quot;,
+                       penalty = 10000,
+                       optimizer = &#39;GA&#39;, maxiter = 1000,
+                       monitor = NULL, #  not show the trace of the optimizer
+                       ini.pars.coef = c(.9, .2, 0, .3, -.6)
+                       )
+fit_ts4$coefficients</code></pre>
+<pre><code>## (Intercept)          x1          x2          x3          x4         ar1 
+##   0.8723881   0.4172644  -0.4995942   0.9640650  -0.5412051  -0.3319868 
+##         ma1 
+##   0.9468758</code></pre>
+<p>The restrictions are still fulfilled
+We can compare the errors of the 4 models:</p>
+<pre class="r"><code>data.frame(
+  metrics = colnames(fit_ts1$metrics),
+  fit_ts1 = as.numeric(fit_ts1$metrics), 
+  fit_ts2 = as.numeric(fit_ts2$metrics), 
+  fit_ts3 = as.numeric(fit_ts3$metrics),
+  fit_ts4 = as.numeric(fit_ts4$metrics)
+  )</code></pre>
+<pre><code>##   metrics      fit_ts1       fit_ts2     fit_ts3      fit_ts4
+## 1      ME    0.1176876  -0.002270358   0.1183575   0.06390114
+## 2    RMSE    1.2075971   0.477373079   0.7518715   0.60901418
+## 3     MAE    0.9814655   0.384961132   0.6203518   0.50078882
+## 4     MPE -179.8131183 -24.536321765 -33.0289775 -50.00654084
+## 5    MAPE  322.1692219  80.143585000 133.7496066 128.19063629</code></pre>
+<p>For predictions you will see that is very easy:</p>
+<pre class="r"><code>pred = predict(fit_ts4, newdata = series[61:63, ], h=3, intervals = 90)
+pred$predict</code></pre>
+<pre><code>##    Prediction Prediction_High Prediction_Low
+## 61   1.676272        2.686525      0.6660188
+## 62   2.164911        3.350802      0.9790192
+## 63   2.819363        4.023045      1.6156807</code></pre>
+<p>And this object, you can plot to see the predictions as well as the fitted values:</p>
+<pre class="r"><code>plot(pred) + theme_minimal()</code></pre>
+<p><img src="/post/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-20-1.png" width="624" /></p>
+<p>In the <strong>ConsRegArima</strong> function, you can introduce the seasonal part P,Q, or in the formula, you can introduce lags in the predictor variables:</p>
+<pre class="r"><code>fit_ts5 = ConsRegArima(y ~ x1+x3+
+                         shift(x3, 2) + # x2 from 2 periods above
+                         x4, 
+                       order = c(1, 1), data = series[1:60,], 
+                       seasonal = list(order = c(1, 0), period = 4), # seasonal component
+                       control = list(trace = 0)
+                       )</code></pre>
+<p>If you have used lags in the predictive variables, then, in the <strong>predict</strong> function, you must add the original data:</p>
+<pre class="r"><code>pred = predict(fit_ts5, newdata = series[61:63,], origdata = series[1:60,])
+pred$predict</code></pre>
+<pre><code>##    Prediction Prediction_High Prediction_Low
+## 59   2.191148        3.601062      0.7812351
+## 60   2.503279        4.006080      1.0004775
+## 61   2.193245        3.706991      0.6794988</code></pre>
+<p>Finally, I have implemented a feature that I miss in many time series packages which is the possibility of backtesting.</p>
+<p>For a <strong>ConsRegArima</strong> object, I have implemented the “rolling” function that allows rolling-forecast with recalibration every <span class="math inline">\(n\)</span> periods, and projections to <span class="math inline">\(h\)</span> periods.</p>
+<p>And of course, very easy to carry out!</p>
+<pre class="r"><code>ro = rolling(object = fit_ts3, used.sample = 50, 
+             refit = 4, h = 4, orig.data = series)</code></pre>
+<p>In this case, the arguments are:</p>
+<ul>
+<li>object: fit_ts3</li>
+<li>used.sample: sample to estimate the first refit. In this case we will use 1 to 50 observations</li>
+<li>refit each 4 periods</li>
+<li>predictions to 4rth period.</li>
+</ul>
+<p>The errors of the rolling are:</p>
+<p>And graphically:</p>
+<pre class="r"><code>plot(ro) + theme_minimal()</code></pre>
+<p><img src="/post/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-24-1.png" width="624" /></p>
+<p>We can compare that errors of 4-step-forecasts are greater than 1-step-forecast:</p>
+<pre class="r"><code>ro$results</code></pre>
+<pre><code>##    xx      Real Prediction Prediction_High Prediction_Low    Fitted
+## 1: 55 2.2588072  1.3297014        2.702927    -0.04352461 1.3470754
+## 2: 56 0.9998795  0.3919824        1.750749    -0.96678383 0.6849166
+## 3: 57 3.5387356  3.1040633        4.453682     1.75444487 3.0891555
+## 4: 58 2.5365840  1.9089582        3.247440     0.57047605 2.0334505
+## 5: 59 0.1263169  0.2512654        1.612710    -1.11017920 0.3981201
+## 6: 60 2.0548210  1.7922128        3.124911     0.45951410 1.6842149</code></pre>
+</div>
+</div>
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+</main>
+
+        <footer id = "bigfooter">
+            <div style = "padding:15px;">
+                <p>Powered by <a href="https://gohugo.io">Hugo</a>. Themed by <a href="https://github.com/nathancday/min_night">min_night</a>.
+                </p>
+                <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"
+                title="Creative Commons Attribution 4.0 International license">
+                <i class="fab fa-creative-commons" aria-hidden="true"></i> Attribution 4.0 International license
+                </a>
+            </div>
+        </footer>
+        
+        <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments)};
+          gtag('js', new Date());
+          gtag('config', '');
+        </script>
+       
+    </body>
+
+</html>
+

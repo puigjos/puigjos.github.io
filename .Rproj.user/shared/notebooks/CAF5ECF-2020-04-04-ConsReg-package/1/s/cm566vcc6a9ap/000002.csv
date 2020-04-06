@@ -1,0 +1,7 @@
+"0","fit_ts5 = ConsRegArima(y ~ x1+x3+"
+"0","                         shift(x3, 2) + # x2 from 2 periods above"
+"0","                         x4, "
+"0","                       order = c(1, 1), data = series[1:60,], "
+"0","                       seasonal = list(order = c(1, 0), period = 4), # seasonal component"
+"0","                       control = list(trace = 0)"
+"0","                       )"

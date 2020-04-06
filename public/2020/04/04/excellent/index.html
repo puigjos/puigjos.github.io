@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Understanding Logistic Regression</title>
+        <link rel="canonical" href="/2020/04/04/excellent/">
+        <style>
+
+    html body {
+        font-family: 'Lato', sans-serif;
+        background-color: #f5f5f5;
+    }
+
+    :root {
+        --accent: #122666;
+        --border-width:  0 ;
+    }
+
+</style>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=VT323">
+
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/lakeside-light.min.css"> 
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/all.css" integrity="sha384-Mmxa0mLqhmOeaE8vgOSbKacftZcsNYDjQzuCOm6D02luYSzBG8vpaOykv9lFQ51Y" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+
+ 
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/bash.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/go.min.js"></script>
+    
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+
+<script>$(document).on('click', function() { $('.collapse').collapse('hide'); })</script>
+
+
+<script>
+$(document).ready(function(){
+    
+  var input = $('#night-mode-toggle');
+  var container = $('#bigbody');
+  var stat = $('#button-status');
+  
+  container.toggleClass(localStorage.toggled);
+  stat.bootstrapToggle(localStorage.button).change();
+  
+  input.on('click', function() {
+      if (localStorage.toggled != "-nightmode" ) {
+          container.toggleClass("-nightmode", true );
+          localStorage.toggled = "-nightmode";
+          localStorage.button = "on";
+       } else {
+          container.toggleClass("-nightmode", false );
+          localStorage.toggled = "";
+          localStorage.button = "off"
+       }
+  })
+});
+</script>
+ <meta name="generator" content="Hugo 0.68.3" />
+        <link href="" rel="alternate" type="application/rss+xml" title="Josep Puig&#39;s Webpage" />
+        <link href="" rel="feed" type="application/rss+xml" title="Josep Puig&#39;s Webpage" />
+        
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#000000">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    
+    
+    
+    <meta property="og:title" content="Understanding Logistic Regression">
+    <meta property="og:type" content="article">
+      
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:image" content="/favicon/Screenshot_1.png" >
+      
+    <meta property="description" content="">
+    <meta property="og:description" content="">
+    
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:site" content="">
+    
+    </head>
+
+    
+    
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    
+
+    <body id = "bigbody">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand visible-xs" href="#">Understanding Logistic Regression</a>
+                    <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse">
+                    
+                        <ul class="nav navbar-nav">
+                            
+                                <li><a href="/">Home</a></li>
+                            
+                                <li><a href="/post/">Posts</a></li>
+                            
+                                <li><a href="/tags/">Tags</a></li>
+                            
+                        </ul>
+                    
+                    
+                        <ul class="nav navbar-nav navbar-right">
+                            
+                                <li class="navbar-icon"><a href="mailto:puigjos@gmail.com"><i class="far fa-envelope"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://github.com/puigjos"><i class="fab fa-github"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://www.linkedin.com/in/puigjos/"><i class="fab fa-linkedin"></i></a></li>
+                            
+                            <li id="night-mode-toggle">
+    <input type="checkbox" id = "button-status"
+        data-toggle="toggle"
+        data-width = "10"
+        data-height = "1"
+        data-on="<i class='far fa-moon fa-lg'></i>"
+        data-off= "<i class='far fa-sun fa-lg'></i>"
+        data-style="ios"
+        data-onstyle = "default">
+</li>
+                        </ul>
+                    
+                </div>
+            </div>
+        </nav>
+
+
+<main>
+
+    <div class="item">
+
+    
+    
+    
+
+    
+    
+      
+    
+
+    <h4><a href="/2020/04/04/excellent/">Understanding Logistic Regression</a></h4>
+    <h5>April 4, 2020 - 7 minutes</h5>
+    <h5></h5>
+
+    
+
+        <a href="/categories/tutorials">
+        <kbd class="item-cat"> Tutorials </kbd>
+    </a>
+    
+
+        <a href="/categories/r">
+        <kbd class="item-cat"> R </kbd>
+    </a>
+    
+    
+    <a href="/tags/r">
+        <kbd class="item-tag"> R </kbd>
+    </a>
+    
+    <a href="/tags/tutorials">
+        <kbd class="item-tag"> Tutorials </kbd>
+    </a>
+    
+
+</div>
+
+
+    <br> <div class="text-justify">
+
+
+<style type="text/css">
+.kable-table table {
+  margin-left: 0;
+}
+img {
+  border: none;
+}
+</style>
+<p>In this post, I would like to explain the estimation of the likelihood function for the GLM models. I will show an example about the logistic regression, but It can be extend to any GLM family (Poisson, Gamma, Gausian,.)</p>
+<p>Let me first review some of the basics about logistic regression and the parameters estimation.</p>
+<p>Suppose a model where our depend variable <span class="math inline">\((y_i)\)</span> takes values 0 or 1 (binary response) which could be an indicator about whether a person has not repaid a loan (<span class="math inline">\(y=1\)</span>) or not (<span class="math inline">\(y=0\)</span>) in the financial field. or, for example, whether a customer has bought a product in marketing.
+And also, we have independent variables or predictors, which we will use to estimate a probability of getting <span class="math inline">\(y_i = 1\)</span>.</p>
+<p>For each observation, mathematically can be express as:
+<span class="math display">\[ y_{i} \sim binom(p_{i})\]</span>
+Where,
+<span class="math display">\[ \eta_{i} = \beta_{0} + X  \beta^{T} + \epsilon_{i} \]</span>
+And becasue of <span class="math inline">\(\eta_{i}\)</span> cannot be interpretated as a probability because it can take values from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(+ \infty\)</span>, we must do a “transformation” in order to have the probability properties and in case of the logistic regression we will use the inverse logic function, which is:
+<span class="math display">\[p_{i} = \frac{1}{1 + exp(-\eta_{i})}\]</span>
+Note that <span class="math inline">\(p\)</span> now is between 0 and 1.</p>
+<p>To estimate the parameters, we usually use the likelihood function (from the Bayesian point of view, for example, they introduce priors and they use other methods to estimate those paraments).</p>
+<p>The likelihood function could be define as: given a predictors and parameters how is likely to observe the data. Therefore, we will have to estimate the parameters that maximize the likelihood function. That is:</p>
+<p><span class="math display">\[ \mathcal{L} (y_{i} | x_{1i}, x_{2i}, \dots , x_{pi} , \beta_{0}, \beta_{1},\dots \beta_{p} ) = \prod_{i=1}^{N} p_{i}^{y_{i}} (1-p_{i})^{(1 - y_{i})} \]</span></p>
+<p>For mathematical convenience, we will take the logarithm:</p>
+<p><span class="math display">\[ log(\mathcal{L}) = \sum_{i=1}^{N} y_{i} log(p_{i}) + (1 - y_{i}) log(1 - p_{i})\]</span>
+Where again,
+<span class="math display">\[p_{i} = \frac{1}{1 + exp( - (\beta_{0} + X  \beta^{T} ))}\]</span>
+If you try to estimate the parameters by deriving <span class="math inline">\(\mathcal{L}\)</span> respect to beta and make equal to zero, you will not be successful. Therefore, we will need a numerical method to maximize such function.</p>
+<p>I propouse the <strong>newthon method</strong> which use Taylor expansion to approximate a function to 0.</p>
+<p>For the optimization of a function with one variable, we have the next procedure:
+<span class="math display">\[x_{t+1} = x_{t} - \frac{f&#39;(x_{t})}{f&#39;&#39;(x_{t}))}\]</span>
+We initialized with some value for <span class="math inline">\(x_{t}\)</span> and with this value we compute <span class="math inline">\(x_{t+1}\)</span>. The with that value, we again compute <span class="math inline">\(x_{t+2}\)</span> by <span class="math inline">\(x_{t+2} = x_{t+1} + \frac{f&#39;(x_{t+1})}{f&#39;&#39;(x_{t+1}))}\)</span>. And iteratively, we will find a <span class="math inline">\(t + k\)</span> until <span class="math inline">\(x_{t+k} = x_{t+k+1}\)</span>. We will say that it has <strong>converged</strong>.
+Let’s see an easy example:</p>
+<p>We want to estimate the maximum of:
+<span class="math display">\[ f(x) = -3x^{4} - 4x+5\]</span></p>
+<pre class="r"><code>require(ggplot2)
+require(dplyr)
+fn = function(x){
+  -3*x^4 - 4*x + 5
+}
+
+ggplot(data = data.frame(x = 0), aes(x)) + 
+  stat_function(fun = fn) + xlim(-5,5) + 
+  ggtitle(&#39;Curve&#39;) + theme_minimal()</code></pre>
+<p><img src="/post/2020-04-01-LogisticRegression_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
+<p>By using the numerical method:
+<span class="math display">\[x_{t+1} = x_{t} - \frac{f&#39;(x_{t})}{f&#39;&#39;(x_{t}))} =  x_{t} - \frac{  12x_{t}^{3} - 4  }{  36  x_{t}^{2}}\]</span></p>
+<p>In R, we define the first and second derivative:</p>
+<pre class="r"><code>fn1 = function(x){
+  12*x^3 - 4
+}
+fn2 = function(x){
+  36*x^2
+}</code></pre>
+<p>And we will do the maximum. We initialize by <span class="math inline">\(x=1\)</span> and we will do 8 iterations:</p>
+<pre class="r"><code>require(data.table)</code></pre>
+<pre><code>## Loading required package: data.table</code></pre>
+<pre><code>## 
+## Attaching package: &#39;data.table&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     between, first, last</code></pre>
+<pre class="r"><code>#initalize x
+x0 = 1
+iter = 8
+
+results = matrix(NA, nrow=iter, ncol=3)
+for(i in 1:iter){
+  x1 = x0 - fn1(x0)/fn2(x0)
+  results[i,] = c(i, x0, x1)
+  # x0 will be equal to x1
+  x0 = x1
+}
+
+results = as.data.table(results)
+names(results) = c(&#39;iteration&#39;,&#39;x0&#39;,&#39;x1&#39;)
+results %&gt;% 
+  melt(., id = &#39;iteration&#39;) %&gt;% 
+  ggplot(aes(x = iteration, y = value, color = variable)) + 
+  geom_line(size = 1) + labs(x = &#39;Iteration&#39;, y = &#39;&#39;, color = &#39;&#39;) +
+  theme_minimal()</code></pre>
+<p><img src="/post/2020-04-01-LogisticRegression_files/figure-html/unnamed-chunk-3-1.png" width="624" /></p>
+<p>Finally, <span class="math inline">\(x_{t+k}\)</span> is equally to 0.6933613. Which it has converged because <span class="math inline">\(x_{t+k-1}\)</span> = <span class="math inline">\(x_{t+k}\)</span></p>
+<p>Moreover, we can check that is the same value as we would compute the derivative and make equal to 0.</p>
+<p><span class="math display">\[\frac{\partial f(x)}{\partial x} =  12x^3 - 4 = 0\]</span>
+Where,</p>
+<p><span class="math display">\[
+x = (4/12)^{\frac{1}{3}} \approx 0,6933613
+\]</span></p>
+<p>With more parameters to estimate, we will need to extend the initial formula by using matrix and vectors: thereby, <span class="math inline">\(x_{t}\)</span> will become a vector, $ f’(x_{t}) $ will be a vector of the derivatives also called the <strong>gradient</strong>, and <span class="math inline">\(f&#39;&#39;(x_{t})\)</span> will become a matrix which diagonal there will be the second derivatives and rest of the elements would be the partial ones. This also is called as the <strong>Hessian</strong> matrix.</p>
+<p><span class="math display">\[\vec{x_{t+1}} = \vec{x_{t}} - \alpha H( \vec{x_{t}})^{-1} gradient(\vec{x_{t}})\]</span></p>
+<p><span class="math inline">\(\alpha\)</span> <span class="math inline">\(\ni\)</span> <span class="math inline">\([0,1]\)</span> is a parameter which could be define as either the speed to get the convergence or the precision of the parameters. If <span class="math inline">\(\alpha\)</span> is closed to one, the faster will be the approximation to 0 but would be less accurate.</p>
+<p>Let’s make an example with R.</p>
+<p>We will simulate a sample with two predictors:</p>
+<pre class="r"><code>set.seed(100)
+x1 = rnorm(3000)
+x2 = rnorm(3000)
+eta = -1.2 -1.1*x1 + 1.2*x2 + rnorm(3000)
+p = 1/(1+exp(-eta))
+y = rbinom(3000, 1, p)
+table(y)</code></pre>
+<pre><code>## y
+##    0    1 
+## 2020  980</code></pre>
+<p>With the <strong>glm</strong> function we will estimate easily the parameters:</p>
+<pre class="r"><code>mod = glm(y~x1+x2, family = binomial())
+stargazer::stargazer(mod)</code></pre>
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: lu., abr. 06, 2020 - 12:25:32
+
+<p>Now, we will estimate the parameters using the method I describe above. I will use the <em>NumDeriv</em> package, that easily, it calcules the gradient and Hessian matrix given a function:</p>
+<pre class="r"><code># First we define our X matrix. The first column is the intercept
+X = cbind(1,x1,x2)
+
+
+Likelihood = function(par){
+  par = matrix(par, nrow=1)
+  eta = X %*% t(par)
+  p = 1/(1 + exp(-eta))
+  # Likelihood function:
+  return( sum ( y * log(p) + (1-y) * log(1 - p)) )
+}</code></pre>
+<p>Once we have defined the likelihood function, we will do the estimation process:</p>
+<pre class="r"><code>require(numDeriv)</code></pre>
+<pre><code>## Loading required package: numDeriv</code></pre>
+<pre class="r"><code># Number of iterations
+iters = 20
+results = matrix(NA, nrow=iters+1, ncol=5)
+x0 = rep(.5,3)
+# Define alpha
+alpha = .5
+results[1,] = c(0, x0, Likelihood(x0))
+for(i in 1:iters){
+  H = hessian(func = Likelihood, x0)
+  gradient = matrix(grad(Likelihood, x0), ncol=1, nrow=length(x0))
+  x1 = as.numeric(x0 - alpha * solve(H) %*% gradient)
+  results[i+1, ] = c(i, x1, Likelihood(x1))
+  x0 = x1
+}
+
+results = as.data.table(results)
+names(results) = c(&#39;Iteration&#39;,&#39;Intercept&#39;,&#39;x1&#39;,&#39;x2&#39;,&#39;Likelihood&#39;)
+results</code></pre>
+<pre><code>Iteration  Intercept         x1        x2 Likelihood</code></pre>
+<p>1: 0 0.5000000 0.5000000 0.5000000 -2592.832
+2: 1 -0.2355385 -0.2116933 0.5102747 -1749.533
+3: 2 -0.5088597 -0.4299705 0.6568883 -1609.755
+4: 3 -0.6900543 -0.5862649 0.7794423 -1555.726
+5: 4 -0.8086118 -0.6935544 0.8692400 -1535.772
+6: 5 -0.8812855 -0.7609931 0.9275759 -1529.128
+7: 6 -0.9228114 -0.8000181 0.9619311 -1527.129
+8: 7 -0.9452762 -0.8212638 0.9808094 -1526.572
+9: 8 -0.9570057 -0.8323918 0.9907456 -1526.425
+10: 9 -0.9630057 -0.8380931 0.9958489 -1526.387
+11: 10 -0.9660411 -0.8409796 0.9984359 -1526.377
+12: 11 -0.9675678 -0.8424320 0.9997384 -1526.374
+13: 12 -0.9683334 -0.8431605 1.0003920 -1526.374
+14: 13 -0.9687168 -0.8435253 1.0007193 -1526.374
+15: 14 -0.9689086 -0.8437079 1.0008831 -1526.374
+16: 15 -0.9690046 -0.8437992 1.0009651 -1526.374
+17: 16 -0.9690526 -0.8438449 1.0010061 -1526.374
+18: 17 -0.9690766 -0.8438677 1.0010266 -1526.374
+19: 18 -0.9690886 -0.8438791 1.0010368 -1526.374
+20: 19 -0.9690946 -0.8438848 1.0010419 -1526.374
+21: 20 -0.9690976 -0.8438877 1.0010445 -1526.374
+Iteration Intercept x1 x2 Likelihood</p>
+<p>Note that the coefficients are the same as the direct way that we did before. And also the likelihood value is the same:</p>
+<pre class="r"><code>print(logLik(mod))</code></pre>
+<pre><code>## &#39;log Lik.&#39; -1526.374 (df=3)</code></pre>
+<pre class="r"><code>print(mod$coefficients)</code></pre>
+<pre><code>## (Intercept)          x1          x2 
+##  -0.9691006  -0.8438905   1.0010470</code></pre>
+<pre class="r"><code>print(results[nrow(results),])</code></pre>
+<pre><code>##    Iteration  Intercept         x1       x2 Likelihood
+## 1:        20 -0.9690976 -0.8438877 1.001044  -1526.374</code></pre>
+<pre class="r"><code>results %&gt;% 
+  dplyr::select(&#39;Iteration&#39;,&#39;Intercept&#39;,&#39;x1&#39;,&#39;x2&#39;) %&gt;% 
+  melt(., id = &#39;Iteration&#39;) %&gt;% 
+  ggplot(aes(x = Iteration, y = value, color = variable)) + 
+  geom_line(size = 1) + labs(x = &#39;Iteration&#39;, y = &#39;&#39;, color = &#39;&#39;) +
+  theme_minimal() + 
+  facet_wrap(~ variable, scales = &#39;free&#39;)</code></pre>
+<p><img src="/post/2020-04-01-LogisticRegression_files/figure-html/unnamed-chunk-9-1.png" width="624" /></p>
+</div>
+
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+</main>
+
+        <footer id = "bigfooter">
+            <div style = "padding:15px;">
+                <p>Powered by <a href="https://gohugo.io">Hugo</a>. Themed by <a href="https://github.com/nathancday/min_night">min_night</a>.
+                </p>
+                <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"
+                title="Creative Commons Attribution 4.0 International license">
+                <i class="fab fa-creative-commons" aria-hidden="true"></i> Attribution 4.0 International license
+                </a>
+            </div>
+        </footer>
+        
+        <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments)};
+          gtag('js', new Date());
+          gtag('config', '');
+        </script>
+       
+    </body>
+
+</html>
+

@@ -1,0 +1,2 @@
+"0","pred = predict(fit_ts4, newdata = series[61:63, ], h=3, intervals = 90)"
+"0","pred$predict"

@@ -1,0 +1,27 @@
+"0","dt_pca <- dt_data %>% 
+  group_by(BOP_NUM, ANY) %>% 
+  do(
+    pca.mod = PCA(.data[, var1[-1]] %>% 
+                    select_if(function(x){
+                      sum(is.na(x)) != length(x)
+                    }), 
+                  scale.unit = F, graph = F, ncp = 3)  
+    ) %>% 
+  ungroup() %>% 
+  mutate(
+    scree_plot = pmap(list(pca.mod, ANY), function(x, y){
+      fviz_eig(X = x, ncp = 3) + labs(x  = '', y = '', title = y) + 
+        ylim(c(0, 45))
+    }),
+    var_explained = map(list(pca.mod), function(x){
+      x$eig[2,3]
+    }), 
+    plot_pca = map(list(), function(x){
+      fviz_pca_biplot(x, axes = c(1,2), geom = 'point', pointsize = .9,
+                repel = T, 
+                habillage = haven::as_factor(.data$Independence))
+    })
+  )
+"
+"2","Error: Column `plot_pca` must be length 6 (the number of rows) or one, not 0
+"

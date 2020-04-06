@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Josep Puig&#39;s Webpage</title>
+    <link>/</link>
+    <description>Recent content on Josep Puig&#39;s Webpage</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 06 Apr 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>My New Package: ConsReg</title>
+      <link>/2020/04/06/excellent/</link>
+      <pubDate>Mon, 06 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/04/06/excellent/</guid>
+      <description>Presentation of ConsReg package</description>
+    </item>
+    
+    <item>
+      <title>Understanding Logistic Regression</title>
+      <link>/2020/04/04/excellent/</link>
+      <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/04/04/excellent/</guid>
+      <description>Understanding the insides of logistic regression</description>
+    </item>
+    
+    <item>
+      <title>Catalan surveys analysis</title>
+      <link>/2020/04/03/excellent/</link>
+      <pubDate>Fri, 03 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/04/03/excellent/</guid>
+      <description>Analysis of trust in the institutions of the Catalan citizens</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/about/about/</link>
+      <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/about/about/</guid>
+      <description>Resume Consultant with experience in quantitative projects about modeling and data mining to obtain competitive advantages for companies. He has mainly worked in the financial sector but also in Energy, Public Administrations and Defense. He has participated in projects of development of predictive and econometric models, database design and also functional and strategic projects. Results-oriented professional with deep analytical thinking and problem-solving skills, combined with strong quantitative education and programming knowledge in R, Python, SAS and SQL as well as visualization tools and Business Intelligence like Tableau, Qlik Sense, Power BI.</description>
+    </item>
+    
+  </channel>
+</rss>

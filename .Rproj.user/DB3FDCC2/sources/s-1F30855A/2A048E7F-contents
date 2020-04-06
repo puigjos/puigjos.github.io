@@ -1,0 +1,139 @@
+var = c("ACTITUD_INDEPENDÈNCIA", 
+  "CONFI_TRIBUNALS", "CONFI_PARTITS" ,"CONFI_AJUNTAMENT", 
+        "CONFI_GOV_ESP", "CONFI_SINDICATS", "CONFI_GOV_CAT", 
+        "CONFI_CONGRÉS", "CONFI_PARLAMENT", "CONFI_UE", 
+        "CONFI_MONARQUIA", "CONFI_EXÈRCIT", "CONFI_POLICIA",                           
+        "CONFI_MOSSOS", "CONFI_ESGLÉSIA", "CONFI_BANCA",                            
+        "CONFI_MITJANS", "CONFI_TRIBUNAL_CONSTITUCIONAL" ) 
+
+var1 <<- c("Independence", 
+        "Courts", "political parties" ,"city councils", 
+        "Spanish Government", "Unions", "Catalan Government", 
+        "Spanish Congres", "Catalan Parliament", "UE Parliament", 
+        "Spanish Monarchy", "Spanish army", "Spanish police",                           
+        "Catalan police", "church", "Banking",                        
+        "Media", "Constitutional court" ) 
+
+dt_data2 <- dt_data %>% 
+  dplyr::select(var) %>% 
+  dplyr::filter_if(is.numeric, function(x){
+    !x %in% c(98, 99)
+  }) %>% 
+  setnames(var1)
+
+dt_data2[,-1] %>% 
+  melt() %>% 
+  ggplot(aes(x = value, y = variable)) + 
+  geom_density_ridges(aes(fill = variable), show.legend = F, alpha = .5) + 
+  theme_minimal() + labs(x = '', y='')
+
+cv <- ClustOfVar::hclustvar(X.quanti = as.matrix(dt_data2[,-1]))
+plot(cv)
+
+corrplot::corrplot(cor(dt_data2[,-1]), tl.pos = 'n')
+
+mod.pca <- PCA(dt_data2[,-1], scale.unit = F, graph = F)
+
+fviz_pca(mod.pca)
+fviz_screeplot(mod.pca)
+
+fviz_pca_biplot(mod.pca, axes = c(1,2), geom = 'point', pointsize = .9,
+                repel = T, 
+                habillage = haven::as_factor(dt_data2$Independence)) + 
+  theme_minimal()
+
+pointsize=.7,habillage = dt_data2$ACTITUD_INDEPENDÈNCIA
+
+mod.pca$var$cor[, 1:2] %>% 
+  round(2)
+
+
+set.seed(1234)
+mod.rtsne <- Rtsne::Rtsne(dt_data2[,-1], dims = 2, theta = .01)
+
+mod.rtsne$Y %>% 
+  data.table(., group = haven::as_factor(dt_data2$ACTITUD_INDEPENDÈNCIA)) %>% 
+  ggplot(aes(x = V1, y = V2, color = group)) + 
+  geom_point() + theme_minimal() + 
+  labs(x = 'V1', y = 'V2', color = 'Referendum', 
+       title = 'Dimensionality reduction using t-SNE')
+
+
+dt_data <- haven::read_spss('./content/post/Microdades anonimitzades fusio presencial.sav') %>%
+  dplyr::select(c(var, 'ANY', 'MES', 'BOP_NUM')) %>% 
+  as.data.table() %>% 
+  dplyr::filter(ANY > 2014) %>% 
+  dplyr::filter_if(is.numeric, function(x){
+    !x %in% c(98, 99)
+  }) %>% 
+  setnames(new = var1, old = var) %>% 
+  dplyr::filter(!is.na(Courts))
+
+
+dt_pca <- dt_data %>% 
+  mutate(Independence = haven::as_factor(Independence)) %>% 
+  as_tibble() %>% 
+  group_by(BOP_NUM, ANY) %>% 
+  nest() %>% 
+  mutate(
+    pca.mod = map(data, function(x){
+      PCA(x[, var1[-1]] %>%
+            select_if(function(x){
+              sum(is.na(x)) != length(x)
+              }),
+          scale.unit = F, graph = F, ncp = 3)  
+      })
+    ) %>% 
+  ungroup() %>% 
+  mutate(    
+    scree_plot = pmap(list(pca.mod, ANY), function(x, y){
+      fviz_eig(X = x, ncp = 3) + labs(x  = '', y = '', title = y) + 
+        ylim(c(0, 45))
+    }),
+    plot_pca = pmap(list(pca.mod, data, ANY), function(x, datos, ANY){
+      fviz_pca_biplot(x, axes = c(1,2), geom = 'point', pointsize = .4,
+                      repel = T, labelsize = 2,
+                      habillage = datos$Independence, title = ANY) +
+        theme(legend.position = 'none') + 
+        labs(x = '', y = '')
+    })
+  )
+
+require(cowplot)
+plot_grid(plotlist = dt_pca$scree_plot, nrow = 1)
+plot_grid(plotlist = dt_pca$plot_pca)
+
+dt_pca_m <- dt_pca %>% 
+  mutate(
+    vars = purrr::map(pca.mod, function(x){
+      data.table(x$var$coord, keep.rownames = T)
+    })
+  ) %>% 
+  dplyr::select(vars, BOP_NUM, ANY) %>% 
+  unnest(vars) %>% 
+  mutate(Date = as.Date(paste0(ANY, '-03-01')))
+
+dt_pca_m$Date = if_else(dt_pca_m$BOP_NUM == 42, as.Date('2017-10-01'), dt_pca_m$Date)
+
+dt_pca_m
+
+require(gganimate)
+
+p1 = ggplot(dt_pca_m) + 
+  ggrepel::geom_text_repel(aes(x = Dim.1, y = Dim.2, label = rn), 
+                           size = 3, show.legend = F) + 
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1 , yend = Dim.2), show.legend = F, 
+               arrow = arrow(length = unit(0.05, "npc"))) + 
+  transition_time(Date) +
+  theme_minimal() + 
+  labs(title = "BOP_NUM: {year(frame_time)}")
+p1
+
+
+
+
+  
+
+
+
+
