@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "4060411033",
+    "hash" : "155991681",
     "id" : "65DE8A95",
-    "lastKnownWriteTime" : 1586173189,
-    "last_content_update" : 1586173189233,
+    "lastKnownWriteTime" : 1586176663,
+    "last_content_update" : 1586176664221,
     "path" : "~/Cositas/MyWebSide/config.toml",
     "project_path" : "config.toml",
     "properties" : {
-        "cursorPosition" : "15,32",
-        "scrollLine" : "9"
+        "cursorPosition" : "0,28",
+        "scrollLine" : "0"
     },
     "read_only" : false,
     "read_only_alternatives" : [
