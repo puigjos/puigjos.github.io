@@ -1,5 +1,5 @@
 baseURL = "puigjos.github.io"
-publishDir = "../username.github.io"
+publishDir = "../puigjos.github.io"
 languageCode = "en-us"
 title = "Josep Puig's Webpage"
 description = "Josep Puig's Webpage"
