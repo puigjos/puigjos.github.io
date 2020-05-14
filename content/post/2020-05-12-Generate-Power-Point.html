@@ -1,0 +1,301 @@
+---
+title: "Power point generator using R"
+author: [Josep Puig]
+output:
+  html_document:
+date: '2020-04-03'
+slug: excellent
+categories:
+  - Tutorials
+  - R
+tags: ["R", "Tutorials"]
+image:
+  caption: ''
+  focal_point: ''
+summary: "Use R to generate flexible power point slides based on a template"
+linktitle: "Catalan surveys analysis"
+menu:
+  package:
+    weight: 30
+type: docs
+weight: 30
+---
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The aim of this post is to explain how power point slides can be generated using R.
+To do this, we will start from an Excel file where each row will correspond to a slide, a power point template and, of course, R.</p>
+<p>You can download the different files from these links.</p>
+<ul>
+<li>Example xlsx <a href="./Example.xlsx">here</a></li>
+<li>Template pptx <a href="./Template.pptx">here</a></li>
+<li>General Doc pptx <a href="./DocExamp.pptx">here</a></li>
+</ul>
+<p>First, let’s load the necessary R packages as well as the example we will analyze in this post.</p>
+<pre class="r"><code>require(officer)
+require(xml2)
+require(readxl)
+require(dplyr)
+require(PtxGenerator) # devtools::install_github(&#39;puigjos/PtxGenerator&#39;)
+
+dt_tasks = readxl::read_excel(&#39;Example.xlsx&#39;, sheet = &#39;Tasks&#39;)
+dt_initiatives = readxl::read_excel(&#39;Example.xlsx&#39;, sheet = &#39;Initiatives&#39;)</code></pre>
+<p>The main idea is to use the flexibility of R to generate slides in an automated way. To do this, we use a power point template where we will identify the names of the different figures in the template where we will embed the information from Excel. It is shown in the following figure:</p>
+<p><img src="template.png" /></p>
+<p>To access this panel is through Arrange -&gt; Selection Pane (red circle in the figure). As you can see, the selection pane shows the different objects/figures that the slide has.</p>
+<p>Next, we will generate a slide from a row of excel:</p>
+<ol style="list-style-type: decimal">
+<li>First of all, we’re going to define a set of styles</li>
+</ol>
+<pre class="r"><code>style_subtitle = officer::fp_text(font.size = 16, bold = T, 
+                                    font.family = &#39;ubuntu&#39;)
+style_ID = officer::fp_text(font.size = 12, bold = F, 
+                            font.family = &#39;ubuntu (Body)&#39;)
+style_text = officer::fp_text(font.size = 10, bold = F, 
+                              font.family = &#39;ubuntu (Body)&#39;)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Then, let’s load the presentation trunk where we will add the slides:</li>
+</ol>
+<pre class="r"><code>general_path = &#39;DocExamp.pptx&#39;
+my_general &lt;- officer::read_pptx(general_path)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>And load the slide where there is the template:</li>
+</ol>
+<pre class="r"><code>file_template = &#39;Template.pptx&#39;
+my_pres &lt;- officer::read_pptx(path = file_template)
+slide_1 = dt_initiatives[1, ]</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>In the next step, we will add text to the slide. The argument ph_label corresponds to the power point object (“selection pane”).</li>
+</ol>
+<pre class="r"><code># Title
+my_pres &lt;- officer::ph_with(my_pres, value = slide_1$Category, 
+                            location = officer::ph_location_type(type = &quot;title&quot;))
+# Subtitle
+my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$SubCategory, pos = &#39;before&#39;,
+                                style = style_subtitle,
+                                ph_label = &#39;Subtitle&#39;)
+## Iniciativa ID
+my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$ID_Iniciativa, 
+                                pos = &#39;before&#39;,
+                                style = style_ID,
+                                ph_label = &#39;IniciativaID&#39;)
+## ResponsableIniciativa
+my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$Responsable, 
+                                pos = &#39;before&#39;,
+                                style = style_ID,
+                                ph_label = &#39;ResponsableIniciativa&#39;)
+## Título
+my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$`Título de la inciativa`, 
+                                pos = &#39;before&#39;,
+                                style = style_ID,
+                                ph_label = &#39;TituloIniciativa&#39;)
+
+# Objetivo
+my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$Objective, 
+                                pos = &#39;before&#39;,
+                                style = style_text,
+                                ph_label = &#39;ObjetivoIniciativa&#39;)
+# Riesgos
+my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$Risks, 
+                                pos = &#39;before&#39;,
+                                style = style_text,
+                                ph_label = &#39;RiesgosIniciativa&#39;)
+
+#  GAPs resueltos
+my_pres &lt;- officer::ph_add_text(my_pres, str = gsub(&#39;\r\n&#39;, &#39;, &#39;, slide_1$ID_GAPS), 
+                                pos = &#39;before&#39;,
+                                style = style_text,
+                                ph_label = &#39;GapsResueltos&#39;)</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>We can then add a table on the slide using the flextable package. Finally, we locate this table to the power point presentation.</li>
+</ol>
+<pre class="r"><code>tmp &lt;- dt_tasks %&gt;% 
+    dplyr::filter(ID_Iniciativa == slide_1$ID_Iniciativa)
+  
+tmp_flex &lt;- tmp %&gt;% 
+  dplyr::select(Tareas, `Responsable tarea`, `Tiempo estimado`, `Recursos estimados`) %&gt;% 
+  flextable::flextable() %&gt;% 
+  flextable::bg(bg = &quot;#e7e6e6&quot;, part = &quot;all&quot;) %&gt;% 
+  flextable::delete_part(part = &#39;header&#39;) %&gt;% 
+  flextable::width(j=1, width = 8.062992126) %&gt;% 
+  flextable::width(j=2, width = 1.645669291) %&gt;% 
+  flextable::width(j=3, width = 1.42519685) %&gt;% 
+  flextable::width(j=4, width = 1.291338583) %&gt;% 
+  flextable::align(j = 1, align = &#39;left&#39;) %&gt;% 
+  flextable::align(j = 2:4, align = &#39;center&#39;) %&gt;% 
+  flextable::valign(valign = &quot;center&quot;, part = &quot;body&quot;) %&gt;% 
+  flextable::font(fontname = &quot;Ubuntu (Body)&quot;) %&gt;% 
+  flextable::fontsize(j = 1, size = 9) %&gt;% 
+  flextable::fontsize(j = 2:4, size = 10) %&gt;% 
+  flextable::border_remove() %&gt;% 
+  flextable::border_inner(border = officer::fp_border(color=&quot;white&quot;))
+  
+my_pres &lt;- officer::ph_with(my_pres, value = tmp_flex, 
+                            location = officer::ph_location(left = 0.5393700787,
+                                                            top = 3.980314961))</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Add the number of people required for this initiative</li>
+</ol>
+<pre class="r"><code>#### total personas
+tot_pers = PtxGenerator::split_function(tmp$`Recursos estimados`, &#39;p&#39;)
+
+to_pers &lt;- paste0(sum(tot_pers$V1), &#39;p - &#39;, sum(tot_pers$V2), &#39;p&#39;)
+my_pres &lt;- officer::ph_add_text(my_pres, str = to_pers,
+                                  pos = &#39;before&#39;,
+                                  style = style_text,
+                                  ph_label = &#39;Total Personas&#39;)</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>In the following step, we can change the color of a figure according to a value. In our case, there is a column in the excel that is complexity and can take the value 1, 2 or 3. This variable is represented in the slide as a traffic light, being 1 a red, 2 yellow and 3 green.</li>
+</ol>
+<pre class="r"><code>colors &lt;- c(&#39;ff3300&#39;, &#39;ffe600&#39;, &#39;00f53d&#39;)
+#  Complexity
+slide = my_pres$slide$get_slide(1)
+slide &lt;- PtxGenerator::figure_number(slide, GeneralName = &#39;C&#39;, colors = colors, 
+                                   blank_colors = &#39;d4d2d4&#39;,
+                                   number = slide_1$Complexity, allnumber = F)
+#  Priority
+slide &lt;- PtxGenerator::figure_number(slide, GeneralName = &#39;P&#39;, colors = colors, 
+                                     blank_colors = &#39;d4d2d4&#39;,
+                                     number = slide_1$Priority, allnumber = F)</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Finally, we save the slide, add to the power point presentation and save it.</li>
+</ol>
+<pre class="r"><code>my_pres$slide$save_slides()
+PtxGenerator::append_slide(x = my_general, 
+                   slide = my_pres$slide$get_slide(1), 
+                   media_copy = T) # we use media_copy = T if there are icons or images
+
+final_file = &#39;final_slides.pptx&#39;
+print(my_general, target = final_file)</code></pre>
+<p>The result is awsome! <a href="./final_slides.pptx">here</a></p>
+<p>If when adding a slide the argument media_copy = T has been used in the append_slide function, then power point will report an error. Such an error can be simply ingested with a “save as”.</p>
+<p>To generate several slides what you would have to do is put all the previous code within a function, and then use a loop to generate the slides:</p>
+<pre class="r"><code>gen_slide_initiatives &lt;- function(slide_1, file_template, dt_tasks){
+  
+  ################################# styles ################################
+  style_subtitle = officer::fp_text(font.size = 16, bold = T, 
+                                    font.family = &#39;ubuntu&#39;)
+  style_ID = officer::fp_text(font.size = 12, bold = F, 
+                              font.family = &#39;ubuntu (Body)&#39;)
+  style_text = officer::fp_text(font.size = 10, bold = F, 
+                                font.family = &#39;ubuntu (Body)&#39;)
+  
+  ################################# start #################################
+  
+  my_pres &lt;- officer::read_pptx(path = file_template) %&gt;% 
+    PtxGenerator::select_slides(index = 1)
+  # Title
+  my_pres &lt;- officer::ph_with(my_pres, value = slide_1$Category, 
+                              location = officer::ph_location_type(type = &quot;title&quot;))
+  # Subtitle
+  my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$SubCategory, pos = &#39;before&#39;,
+                                  style = style_subtitle,
+                                  ph_label = &#39;Subtitle&#39;)
+  ## Iniciativa ID
+  my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$ID_Iniciativa, 
+                                  pos = &#39;before&#39;,
+                                  style = style_ID,
+                                  ph_label = &#39;IniciativaID&#39;)
+  ## ResponsableIniciativa
+  my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$Responsable, 
+                                  pos = &#39;before&#39;,
+                                  style = style_ID,
+                                  ph_label = &#39;ResponsableIniciativa&#39;)
+  ## Título
+  my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$`Título de la inciativa`, 
+                                  pos = &#39;before&#39;,
+                                  style = style_ID,
+                                  ph_label = &#39;TituloIniciativa&#39;)
+  
+  # Objetivo
+  my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$Objective, 
+                                  pos = &#39;before&#39;,
+                                  style = style_text,
+                                  ph_label = &#39;ObjetivoIniciativa&#39;)
+  # Riesgos
+  my_pres &lt;- officer::ph_add_text(my_pres, str = slide_1$Risks, 
+                                  pos = &#39;before&#39;,
+                                  style = style_text,
+                                  ph_label = &#39;RiesgosIniciativa&#39;)
+  
+  #  GAPs resueltos
+  my_pres &lt;- officer::ph_add_text(my_pres, str = gsub(&#39;\r\n&#39;, &#39;, &#39;, slide_1$ID_GAPS), 
+                                  pos = &#39;before&#39;,
+                                  style = style_text,
+                                  ph_label = &#39;GapsResueltos&#39;)
+  
+  # Tareas
+  
+  tmp &lt;- dt_tasks %&gt;% 
+    dplyr::filter(ID_Iniciativa == slide_1$ID_Iniciativa)
+  
+  tmp_flex &lt;- tmp %&gt;% 
+    dplyr::select(Tareas, `Responsable tarea`, `Tiempo estimado`, `Recursos estimados`) %&gt;% 
+    flextable::flextable() %&gt;% 
+    flextable::bg(bg = &quot;#e7e6e6&quot;, part = &quot;all&quot;) %&gt;% 
+    flextable::delete_part(part = &#39;header&#39;) %&gt;% 
+    flextable::width(j=1, width = 8.062992126) %&gt;% 
+    flextable::width(j=2, width = 1.645669291) %&gt;% 
+    flextable::width(j=3, width = 1.42519685) %&gt;% 
+    flextable::width(j=4, width = 1.291338583) %&gt;% 
+    flextable::align(j = 1, align = &#39;left&#39;) %&gt;% 
+    flextable::align(j = 2:4, align = &#39;center&#39;) %&gt;% 
+    flextable::valign(valign = &quot;center&quot;, part = &quot;body&quot;) %&gt;% 
+    flextable::font(fontname = &quot;Ubuntu (Body)&quot;) %&gt;% 
+    flextable::fontsize(j = 1, size = 9) %&gt;% 
+    flextable::fontsize(j = 2:4, size = 10) %&gt;% 
+    flextable::border_remove() %&gt;% 
+    flextable::border_inner(border = officer::fp_border(color=&quot;white&quot;))
+  
+  
+  my_pres &lt;- officer::ph_with(my_pres, value = tmp_flex, 
+                              location = officer::ph_location(left = 0.5393700787,
+                                                              top = 3.980314961))
+  
+  #### total personas
+  tot_pers &lt;- PtxGenerator::split_function(tmp$`Recursos estimados`, &#39;p&#39;)
+  tot_pers &lt;- paste0(sum(tot_pers$V1), &#39;p - &#39;, sum(tot_pers$V2), &#39;p&#39;)
+  
+  # Dependencias 
+  my_pres &lt;- officer::ph_add_text(my_pres, str = tot_pers, 
+                                  pos = &#39;before&#39;,
+                                  style = style_text,
+                                  ph_label = &#39;Total Personas&#39;)
+  colors &lt;- c(&#39;ff3300&#39;, &#39;ffe600&#39;, &#39;00f53d&#39;)
+  #  Complejidad
+  slide = my_pres$slide$get_slide(1)
+  slide &lt;- PtxGenerator::figure_number(slide, GeneralName = &#39;C&#39;, colors = colors, 
+                                       blank_colors = &#39;d4d2d4&#39;,
+                                       number = slide_1$Complexity, allnumber = F)
+  #  Prioridad
+  slide &lt;- PtxGenerator::figure_number(slide, GeneralName = &#39;P&#39;, colors = colors, 
+                                       blank_colors = &#39;d4d2d4&#39;,
+                                       number = slide_1$Priority, allnumber = F)
+  
+  my_pres$slide$save_slides()
+  
+  return(my_pres)
+}</code></pre>
+<p>As I mentioned, using the above function within a loop.</p>
+<pre class="r"><code>my_general &lt;- officer::read_pptx(general_path)
+for(i in 1:6){
+  my_pres = gen_slide_initiatives(slide_1 = dt_initiatives[i, ],
+                        file_template = file_template, 
+                        dt_tasks = dt_tasks)
+  PtxGenerator::append_slide(x = my_general, 
+                   slide = my_pres$slide$get_slide(1),
+                   media_copy = T)
+  }
+final_file = &#39;all_final_slides.pptx&#39;
+print(my_general, target = final_file)</code></pre>
+<p>This is the result! <a href="./all_final_slides.pptx">here</a></p>
+<p>Some tips and things that you can do:</p>
+<ul>
+<li>Organize your information in a structured way. Excel is a good tool and very accessible for the general public. The more it is structured, the more it can be used.</li>
+<li>With the <strong>PtxGenerator</strong> package you can change the colors of a figure, copy groups of figures from one slide to another, change the size and position of an object, …</li>
+<li>Anything that is automated, apart from reducing a significant amount of time, reduces the human risk of error. R can be a useful tool.</li>
+<li>See a complete of this package <a href="https://github.com/puigjos/PtxExample">here</a></li>
+</ul>
+</div>

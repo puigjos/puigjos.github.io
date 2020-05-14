@@ -123,7 +123,7 @@ dt_data2 &lt;- dt_data %&gt;%
 <pre class="r"><code>ggplot(dt_melt_data, aes(x = value, y = variable)) + 
   ggridges::geom_density_ridges(aes(fill = variable), show.legend = F, alpha = .5) + 
   theme_minimal() + labs(x = &#39;&#39;, y=&#39;&#39;)</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <ul>
 <li>BoxPlot</li>
 </ul>
@@ -131,7 +131,7 @@ dt_data2 &lt;- dt_data %&gt;%
   geom_boxplot(aes(fill = variable), show.legend = F, alpha = .5) + 
   theme_minimal() + labs(x = &#39;&#39;, y=&#39;&#39;) +
   theme(axis.text.x = element_text(angle = 90))</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <ul>
 <li>Violin</li>
 </ul>
@@ -139,19 +139,19 @@ dt_data2 &lt;- dt_data %&gt;%
   geom_violin(aes(fill = variable), show.legend = F, alpha = .5) + 
   theme_minimal() + labs(x = &#39;&#39;, y=&#39;&#39;) +
   theme(axis.text.x = element_text(angle = 90))</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>So far we have analyzed at the univariate level. Let’s look at the relationship between variables:</p>
 <ul>
 <li>Corrplot</li>
 </ul>
 <pre class="r"><code>corrplot::corrplot(cor(dt_data2[,-1]), tl.pos = &#39;n&#39;)</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <ul>
 <li>Cluster of variables</li>
 </ul>
 <pre class="r"><code>cv &lt;- ClustOfVar::hclustvar(X.quanti = as.matrix(dt_data2[,-1]))
 plot(cv)</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <ul>
 <li>Principal Component Analysis (PCA)</li>
 </ul>
@@ -160,13 +160,13 @@ plot(cv)</code></pre>
 <p>Since all values range from 0 to 10, no scaling or standardization of data is necessary.</p>
 <p>From the screeplot, we can see that with two vectors, we manage to explain almost 60% of the variance of the data. Remember that we have a matrix of 17 columns, so we have moved to each variable explained 5.8% (1/17), to two vectors explain 57%!</p>
 <pre class="r"><code>fviz_screeplot(mod.pca)</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>In the graph below, the first component will be painted on the x-axis and the second component on the y-axis. The arrows on the graph represent the correlation of the component with the original variable. Finally, the points will be colored by their referendum response:</p>
 <pre class="r"><code>fviz_pca_biplot(mod.pca, axes = c(1,2), geom = &#39;point&#39;, pointsize = .9,
                 repel = T, 
                 habillage = haven::as_factor(dt_data2$Independence)) + 
   theme_minimal()</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>The following table shows the correlation of each component with the original variables of the matrix:</p>
 <pre class="r"><code>mod.pca$var$cor[, 1:3] %&gt;% 
   round(2) %&gt;% 
@@ -307,7 +307,7 @@ mod.rtsne$Y %&gt;%
   geom_point() + theme_minimal() + 
   labs(x = &#39;V1&#39;, y = &#39;V2&#39;, color = &#39;Referendum&#39;, 
        title = &#39;Dimensionality reduction using t-SNE&#39;)</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>For the time being, we have analysed data from the last barometer asking about such issues. But how has the public’s perception changed since 2015?</p>
 <pre class="r"><code>require(cowplot)
 require(purrr)
@@ -352,10 +352,10 @@ require(gganimate)</code></pre>
   )</code></pre>
 <p>De momento, la variabilidad explicada por la primera y segunda componente es bastante parecida en todos los barómetros</p>
 <pre class="r"><code>plot_grid(plotlist = dt_pca$scree_plot, nrow = 1)</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Look at the following chart:</p>
 <pre class="r"><code>plot_grid(plotlist = dt_pca$plot_pca)</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-19-1.png" width="960" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-19-1.png" width="960" /></p>
 <p>From 2015 to early 2017, the first component determines the people who are happy or dissatisfied with the institutions, i.e. the higher the value of component one, the more satisfied they are with the institutions, while the second component separates the independents from the non-independents.</p>
 <p>From the second half of 2017 (after October 1st), it is clearly seen as the first component takes on a more Spanish (anti-Spanish) direction. That is to say, negative values of the first component is that they score under the Spanish institutions (police, army, …)</p>
 <p>Let’s animate the graphic above</p>
@@ -380,4 +380,4 @@ p1 = ggplot(dt_pca_m) +
   theme_minimal() + 
   labs(title = &quot;BOP_NUM: {year(frame_time)}&quot;)
 p1</code></pre>
-<p><img src="/post/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-20-1.gif" /><!-- --></p>
+<p><img src="/puigjos.github.iopost/2020-04-03-CEO-trust-catalan_files/figure-html/unnamed-chunk-20-1.gif" /><!-- --></p>

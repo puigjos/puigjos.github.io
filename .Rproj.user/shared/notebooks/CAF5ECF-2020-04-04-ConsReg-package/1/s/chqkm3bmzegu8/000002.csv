@@ -1,5 +1,0 @@
-"0","pred = data.frame("
-"0","  fit1 = predict(fit1, newdata = fake_data[2:3,]), "
-"0","  fit2 = predict(fit2, newdata = fake_data[2:3,])"
-"0","  )"
-"0","pred"

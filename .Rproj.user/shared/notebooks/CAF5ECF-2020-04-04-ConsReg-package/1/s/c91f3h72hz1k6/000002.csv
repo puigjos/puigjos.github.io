@@ -1,7 +1,0 @@
-"0","data.frame("
-"0","  metrics = colnames(fit_ts1$metrics),"
-"0","  fit_ts1 = as.numeric(fit_ts1$metrics), "
-"0","  fit_ts2 = as.numeric(fit_ts2$metrics), "
-"0","  fit_ts3 = as.numeric(fit_ts3$metrics),"
-"0","  fit_ts4 = as.numeric(fit_ts4$metrics)"
-"0","  )"

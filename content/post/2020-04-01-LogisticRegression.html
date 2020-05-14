@@ -66,7 +66,7 @@ fn = function(x){
 ggplot(data = data.frame(x = 0), aes(x)) + 
   stat_function(fun = fn) + xlim(-5,5) + 
   ggtitle(&#39;Curve&#39;) + theme_minimal()</code></pre>
-<p><img src="/post/2020-04-01-LogisticRegression_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-01-LogisticRegression_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
 <p>By using the numerical method:
 <span class="math display">\[x_{t+1} = x_{t} - \frac{f&#39;(x_{t})}{f&#39;&#39;(x_{t}))} =  x_{t} - \frac{  12x_{t}^{3} - 4  }{  36  x_{t}^{2}}\]</span></p>
 <p>In R, we define the first and second derivative:</p>
@@ -103,7 +103,7 @@ results %&gt;%
   ggplot(aes(x = iteration, y = value, color = variable)) + 
   geom_line(size = 1) + labs(x = &#39;Iteration&#39;, y = &#39;&#39;, color = &#39;&#39;) +
   theme_minimal()</code></pre>
-<p><img src="/post/2020-04-01-LogisticRegression_files/figure-html/unnamed-chunk-3-1.png" width="624" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-01-LogisticRegression_files/figure-html/unnamed-chunk-3-1.png" width="624" /></p>
 <p>Finally, <span class="math inline">\(x_{t+k}\)</span> is equally to 0.6933613. Which it has converged because <span class="math inline">\(x_{t+k-1}\)</span> = <span class="math inline">\(x_{t+k}\)</span></p>
 <p>Moreover, we can check that is the same value as we would compute the derivative and make equal to 0.</p>
 <p><span class="math display">\[\frac{\partial f(x)}{\partial x} =  12x^3 - 4 = 0\]</span>
@@ -130,7 +130,7 @@ table(y)</code></pre>
 <pre class="r"><code>mod = glm(y~x1+x2, family = binomial())
 stargazer::stargazer(mod)</code></pre>
 % Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-% Date and time: lu., abr. 06, 2020 - 12:25:32
+% Date and time: ju., may. 14, 2020 - 9:50:19
 
 <p>Now, we will estimate the parameters using the method I describe above. I will use the <em>NumDeriv</em> package, that easily, it calcules the gradient and Hessian matrix given a function:</p>
 <pre class="r"><code># First we define our X matrix. The first column is the intercept
@@ -204,4 +204,4 @@ Iteration Intercept x1 x2 Likelihood</p>
   geom_line(size = 1) + labs(x = &#39;Iteration&#39;, y = &#39;&#39;, color = &#39;&#39;) +
   theme_minimal() + 
   facet_wrap(~ variable, scales = &#39;free&#39;)</code></pre>
-<p><img src="/post/2020-04-01-LogisticRegression_files/figure-html/unnamed-chunk-9-1.png" width="624" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-01-LogisticRegression_files/figure-html/unnamed-chunk-9-1.png" width="624" /></p>

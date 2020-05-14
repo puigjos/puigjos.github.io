@@ -119,7 +119,7 @@ require(data.table)</code></pre>
 ##   method             from    
 ##   fitted.fracdiff    fracdiff
 ##   residuals.fracdiff fracdiff</code></pre>
-<p><img src="/post/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-5-1.png" width="624" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-5-1.png" width="624" /></p>
 <p>Let’s put some constraints to the model:</p>
 <ul>
 <li>All coefficients will be less than 1 and greater than -1</li>
@@ -133,7 +133,7 @@ require(data.table)</code></pre>
             optimizer = &#39;mcmc&#39;,
             LOWER = -1, UPPER = 1,
             ini.pars.coef = c(-.4, .12, -.004, 0.1, 0.1, .15))</code></pre>
-<pre><code>## number of accepted runs: 869 out of 1000 (86.9%)</code></pre>
+<pre><code>## number of accepted runs: 811 out of 1000 (81.1%)</code></pre>
 <p>To put in the function is just:</p>
 <ul>
 <li>LOWER: -1 means that the lowest value that can take any coefficient is -1</li>
@@ -144,15 +144,15 @@ require(data.table)</code></pre>
 <p>Observe that now, all coefficient fulfill our constraints:</p>
 <pre class="r"><code>rbind(coef(fit1), 
       coef(fit2))</code></pre>
-<pre><code>##      (Intercept)         x1           x2         x3     I(x3^2)        x4
-## [1,]  -1.6510089 0.12905434 -0.004316285 -0.1276599  0.02000789 0.6547376
-## [2,]  -0.9084914 0.04276187  0.006941862  0.1576917 -0.05707335 0.1731182</code></pre>
+<pre><code>##      (Intercept)        x1           x2          x3     I(x3^2)        x4
+## [1,]  -1.6510089 0.1290543 -0.004316285 -0.12765985 0.020007889 0.6547376
+## [2,]  -0.9469332 0.3770815 -0.007780484  0.01524115 0.002375659 0.1598782</code></pre>
 <p>Also we can compare the errors to see that there is no much difference:</p>
 <pre class="r"><code>rbind(fit1$metrics, 
       fit2$metrics)</code></pre>
 <pre><code>##      LogLik     RMSE      MAE     MAPE      MSE    SMAPE
 ## 1 -2410.638 2.695813 2.052225 4.255439 7.267408 1.086447
-## 2 -2484.927 2.903708 2.109934 3.108930 8.431521 1.198035</code></pre>
+## 2 -2497.801 2.941333 2.121297 2.648462 8.651440 1.271906</code></pre>
 <p>For predictions, it follows the same system as a glm or lm object:</p>
 <pre class="r"><code>pred = data.frame(
   fit1 = predict(fit1, newdata = fake_data[2:3,]), 
@@ -160,15 +160,15 @@ require(data.table)</code></pre>
   )
 pred</code></pre>
 <pre><code>##        fit1       fit2
-## 2 -1.676538 -0.7668886
-## 3 -2.263643 -1.0736876</code></pre>
+## 2 -1.676538 -0.8795308
+## 3 -2.263643 -1.6346537</code></pre>
 <p>Setting the parameter <strong>component = T</strong>, returns a matrix for the weight of each variable to the predictions</p>
 <pre class="r"><code>pr = predict(fit2, components = T, newdata = fake_data[5,])
 pr</code></pre>
-<pre><code>##        Total (Intercept)         x1           x2        x3    I(x3^2)
-## 5 -0.9183701  -0.9084914 0.05245317 -0.007305731 0.4730752 -0.5136602
+<pre><code>##        Total (Intercept)       x1          x2         x3    I(x3^2)
+## 5 -0.4224362  -0.9469332 0.462541 0.008188311 0.04572345 0.02138093
 ##            x4
-## 5 -0.01444113</code></pre>
+## 5 -0.01333668</code></pre>
 </div>
 <div id="consregarima" class="section level2">
 <h2>ConsRegArima</h2>
@@ -179,7 +179,7 @@ pr</code></pre>
 <pre class="r"><code>data(&#39;series&#39;)</code></pre>
 <p>The objective function has the following trend:</p>
 <pre class="r"><code>plot(series$y, t=&#39;l&#39;)</code></pre>
-<p><img src="/post/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-12-1.png" width="624" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-12-1.png" width="624" /></p>
 <p>And the data set has 4 predictive variables:</p>
 <pre class="r"><code>head(series)</code></pre>
 <pre><code>##            y          x1         x2 x3         x4
@@ -237,9 +237,9 @@ fit_ts3$coefficients</code></pre>
                        )
 fit_ts4$coefficients</code></pre>
 <pre><code>## (Intercept)          x1          x2          x3          x4         ar1 
-##   0.8723881   0.4172644  -0.4995942   0.9640650  -0.5412051  -0.3319868 
+##   0.8689768   0.4266158  -0.5052985   0.9677748  -0.5509970  -0.2759933 
 ##         ma1 
-##   0.9468758</code></pre>
+##   0.9777040</code></pre>
 <p>The restrictions are still fulfilled
 We can compare the errors of the 4 models:</p>
 <pre class="r"><code>data.frame(
@@ -250,21 +250,21 @@ We can compare the errors of the 4 models:</p>
   fit_ts4 = as.numeric(fit_ts4$metrics)
   )</code></pre>
 <pre><code>##   metrics      fit_ts1       fit_ts2     fit_ts3      fit_ts4
-## 1      ME    0.1176876  -0.002270358   0.1183575   0.06390114
-## 2    RMSE    1.2075971   0.477373079   0.7518715   0.60901418
-## 3     MAE    0.9814655   0.384961132   0.6203518   0.50078882
-## 4     MPE -179.8131183 -24.536321765 -33.0289775 -50.00654084
-## 5    MAPE  322.1692219  80.143585000 133.7496066 128.19063629</code></pre>
+## 1      ME    0.1176876  -0.002270358   0.1183575   0.06143651
+## 2    RMSE    1.2075971   0.477373079   0.7518715   0.60127082
+## 3     MAE    0.9814655   0.384961132   0.6203518   0.48566462
+## 4     MPE -179.8131183 -24.536321765 -33.0289775 -52.07218679
+## 5    MAPE  322.1692219  80.143585000 133.7496066 125.82845228</code></pre>
 <p>For predictions you will see that is very easy:</p>
 <pre class="r"><code>pred = predict(fit_ts4, newdata = series[61:63, ], h=3, intervals = 90)
 pred$predict</code></pre>
 <pre><code>##    Prediction Prediction_High Prediction_Low
-## 61   1.676272        2.686525      0.6660188
-## 62   2.164911        3.350802      0.9790192
-## 63   2.819363        4.023045      1.6156807</code></pre>
+## 61   1.676757        2.675551      0.6779629
+## 62   2.170601        3.389090      0.9521128
+## 63   2.830618        4.064239      1.5969976</code></pre>
 <p>And this object, you can plot to see the predictions as well as the fitted values:</p>
 <pre class="r"><code>plot(pred) + theme_minimal()</code></pre>
-<p><img src="/post/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-20-1.png" width="624" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-20-1.png" width="624" /></p>
 <p>In the <strong>ConsRegArima</strong> function, you can introduce the seasonal part P,Q, or in the formula, you can introduce lags in the predictor variables:</p>
 <pre class="r"><code>fit_ts5 = ConsRegArima(y ~ x1+x3+
                          shift(x3, 2) + # x2 from 2 periods above
@@ -295,7 +295,7 @@ pred$predict</code></pre>
 <p>The errors of the rolling are:</p>
 <p>And graphically:</p>
 <pre class="r"><code>plot(ro) + theme_minimal()</code></pre>
-<p><img src="/post/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-24-1.png" width="624" /></p>
+<p><img src="/puigjos.github.iopost/2020-04-06-ConsReg-package_files/figure-html/unnamed-chunk-24-1.png" width="624" /></p>
 <p>We can compare that errors of 4-step-forecasts are greater than 1-step-forecast:</p>
 <pre class="r"><code>ro$results</code></pre>
 <pre><code>##    xx      Real Prediction Prediction_High Prediction_Low    Fitted
